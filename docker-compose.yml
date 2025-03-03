@@ -1,0 +1,24 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-CU13-ubuntu-20.04
+    container_name: sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=PassW0rd
+      - MSSQL_PID=Express
+    ports:
+      - "5433:1433"
+    volumes:
+      - ./data/scripts/ddl:/scripts
+    command: |
+      /bin/bash -c "
+      /opt/mssql/bin/sqlservr & 
+      sleep 30 && 
+      /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'PassW0rd' -i /scripts/init.sql 
+      sleep infinity"
+    networks:
+      - albumsystem_ntw
+
+networks:
+  albumsystem_ntw:
+    driver: bridge
