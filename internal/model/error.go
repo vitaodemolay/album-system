@@ -9,3 +9,8 @@ var (
 	ErrAlbumArtistNotInformed = errors.New("artist field is required")
 	ErrAlbumPriceIsInvalid    = errors.New("price field must be greater than zero")
 )
+
+type HTTPError struct {
+	Code    int    `json:"code"  examples:"400"`
+	Message string `json:"message" examples:"status bad request"`
+}
