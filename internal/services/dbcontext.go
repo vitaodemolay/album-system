@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"database/sql"
 
 	mssql "github.com/microsoft/go-mssqldb"
@@ -8,10 +9,10 @@ import (
 )
 
 type ISqlDbContext interface {
-	AddAlbum(album *model.Album) error
+	AddAlbum(album *model.Album) (int, error)
 	GetAlbumById(id string) (*model.Album, error)
 	GetAlbumListByTitle(title string) ([]*model.Album, error)
-	DeleteAlbum(id int) error
+	DeleteAlbum(id string) error
 }
 
 type sqlDbContext struct {
@@ -27,10 +28,11 @@ func NewSqlDbContext(conString string) (*sqlDbContext, error) {
 	return &sqlDbContext{Db: db}, nil
 }
 
-func (ctx *sqlDbContext) AddAlbum(album *model.Album) error {
-	scriptSql := "INSERT INTO TbAlbum (Title, Artist, Price) VALUES (@Title, @Artist, @Price)"
-	_, err := ctx.Db.Exec(scriptSql, sql.Named("Title", mssql.VarChar(album.Title)), sql.Named("Artist", mssql.VarChar(album.Artist)), sql.Named("Price", album.Price))
-	return err
+func (ctx *sqlDbContext) AddAlbum(album *model.Album) (int, error) {
+	scriptSql := "INSERT INTO TbAlbum (Title, Artist, Price) OUTPUT INSERTED.ID VALUES (@Title, @Artist, @Price)"
+	var id int
+	err := ctx.Db.QueryRowContext(context.Background(), scriptSql, sql.Named("Title", mssql.VarChar(album.Title)), sql.Named("Artist", mssql.VarChar(album.Artist)), sql.Named("Price", album.Price)).Scan(&id)
+	return id, err
 }
 
 func (ctx *sqlDbContext) GetAlbumById(id string) (*model.Album, error) {
@@ -71,7 +73,7 @@ func (ctx *sqlDbContext) GetAlbumListByTitle(title string) ([]*model.Album, erro
 	return albums, nil
 }
 
-func (ctx *sqlDbContext) DeleteAlbum(id int) error {
+func (ctx *sqlDbContext) DeleteAlbum(id string) error {
 	scriptSql := "DELETE FROM TbAlbum WHERE ID = @ID"
 
 	_, err := ctx.Db.Exec(scriptSql, sql.Named("ID", id))

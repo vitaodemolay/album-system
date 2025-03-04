@@ -15,9 +15,14 @@ const (
 func main() {
 	log.Println("Starting server on port 8080...")
 	router := mux.NewRouter()
+
 	ctrl := controller.NewController(connectionString)
 	router.HandleFunc("/", rootDefaultOK).Methods("GET")
 	router.HandleFunc("/api/albums", ctrl.GetAlbums).Methods("GET")
+	router.HandleFunc("/api/albums/{id}", ctrl.GetAlbumById).Methods("GET")
+	router.HandleFunc("/api/albums", ctrl.CreateAlbum).Methods("POST")
+	router.HandleFunc("/api/albums/{id}", ctrl.DeleteAlbum).Methods("DELETE")
+
 	log.Println("Server started")
 	log.Fatal(http.ListenAndServe(":8080", router))
 }

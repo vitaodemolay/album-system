@@ -5,11 +5,11 @@ import (
 )
 
 type IAlbumService interface {
-	AddAlbum(album *model.Album) error
+	AddAlbum(album *model.Album) (int, error)
 	GetAllAlbums() ([]*model.Album, error)
 	GetAlbumById(id string) (*model.Album, error)
 	SearchAlbumsByTitle(title string) ([]*model.Album, error)
-	DeleteAlbum(id int) error
+	DeleteAlbum(id string) error
 }
 
 type albumService struct {
@@ -26,7 +26,7 @@ func NewAlbumService(conString string) (*albumService, error) {
 	return &albumService{ctx: ctx}, nil
 }
 
-func (s *albumService) AddAlbum(album *model.Album) error {
+func (s *albumService) AddAlbum(album *model.Album) (int, error) {
 	return s.ctx.AddAlbum(album)
 }
 
@@ -42,6 +42,6 @@ func (s *albumService) SearchAlbumsByTitle(title string) ([]*model.Album, error)
 	return s.ctx.GetAlbumListByTitle(title)
 }
 
-func (s *albumService) DeleteAlbum(id int) error {
+func (s *albumService) DeleteAlbum(id string) error {
 	return s.ctx.DeleteAlbum(id)
 }
