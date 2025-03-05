@@ -1,0 +1,10 @@
+CONSUMER tester-CONSUMER
+topic: test-topic
+from: earliest
+
+PRODUCER keyed-message
+topic: test-topic
+key: mykeyq
+{{random.words}}
+
+###
