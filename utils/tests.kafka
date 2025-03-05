@@ -2,6 +2,14 @@ CONSUMER tester-CONSUMER
 topic: test-topic
 from: earliest
 
+###
+
+CONSUMER tester-albums-public-events
+topic: albums-public-events
+from: earliest
+
+###
+
 PRODUCER keyed-message
 topic: test-topic
 key: mykeyq

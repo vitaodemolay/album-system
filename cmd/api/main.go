@@ -10,13 +10,14 @@ import (
 
 const (
 	connectionString = "sqlserver://sa:PassW0rd@localhost:5433?database=SLQ_ALBUMSYSTEM_DB&connection+timeout=30"
+	kafkaConnection  = "localhost:9092"
 )
 
 func main() {
 	log.Println("Starting server on port 8080...")
 	router := mux.NewRouter()
 
-	ctrl := controller.NewController(connectionString)
+	ctrl := controller.NewController(connectionString, kafkaConnection)
 	router.HandleFunc("/", rootDefaultOK).Methods("GET")
 	router.HandleFunc("/api/albums", ctrl.GetAlbums).Methods("GET")
 	router.HandleFunc("/api/albums/{id}", ctrl.GetAlbumById).Methods("GET")
