@@ -16,3 +16,15 @@ key: mykeyq
 {{random.words}}
 
 ###
+
+PRODUCER keyed-message
+topic: albums-public-events
+headers: person=vmrc
+key: {{random.uuid}}
+{
+    "type": 0,
+    "data": {},
+    "date": {{date.soon}}
+}
+
+###
