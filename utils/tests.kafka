@@ -1,0 +1,30 @@
+CONSUMER tester-CONSUMER
+topic: test-topic
+from: earliest
+
+###
+
+CONSUMER tester-albums-public-events
+topic: albums-public-events
+from: earliest
+
+###
+
+PRODUCER keyed-message
+topic: test-topic
+key: mykeyq
+{{random.words}}
+
+###
+
+PRODUCER keyed-message
+topic: albums-public-events
+headers: person=vmrc
+key: {{random.uuid}}
+{
+    "type": 0,
+    "data": {},
+    "date": {{date.soon}}
+}
+
+###

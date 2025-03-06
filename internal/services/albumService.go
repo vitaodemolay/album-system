@@ -1,6 +1,7 @@
 package services
 
 import (
+	"github.com/vitaodemolay/album-system/internal/infrastructure"
 	"github.com/vitaodemolay/album-system/internal/model"
 )
 
@@ -13,11 +14,11 @@ type IAlbumService interface {
 }
 
 type albumService struct {
-	ctx ISqlDbContext
+	ctx infrastructure.ISqlDbContext
 }
 
 func NewAlbumService(conString string) (*albumService, error) {
-	ctx, err := NewSqlDbContext(conString)
+	ctx, err := infrastructure.NewSqlDbContext(conString)
 
 	if err != nil {
 		return nil, err
